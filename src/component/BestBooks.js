@@ -8,7 +8,7 @@ class BestBooks extends Component {
     super(props);
 
     this.state = {
-      booksData: [{ id: 1, name: "greatBook", img: "" }],
+      booksData: [],
       showErrMs: false,
       errMssg: " the book collection is empty.😞",
     };
