@@ -11,15 +11,14 @@ function App() {
       <Header />
       <Router>
         <Switch>
-          <Route exact path="/">
-            <App />
+          <Route exact path="/books">
+            <BestBooks />
           </Route>
           <Route exact path="/profile">
             <Profile />
           </Route>
         </Switch>
       </Router>
-      <BestBooks />
     </div>
   );
 }
