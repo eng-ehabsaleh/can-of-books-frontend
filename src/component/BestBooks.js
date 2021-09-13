@@ -14,9 +14,11 @@ class BestBooks extends Component {
     };
   }
 
+ 
   componentDidMount = () => {
+    console.log( "React",process.env.REACT_APP_BOOKS)
     axios
-      .get(`${process.env.REAC_APP_BOOKS}/books`)
+      .get(`${process.env.REACT_APP_API_UR}/books`)
       .then((bookeRes) => {
         this.setState({
           booksData: bookeRes.data,
@@ -27,6 +29,8 @@ class BestBooks extends Component {
         this.setState({ showErrMs: true });
       });
   };
+
+
   render() {
     return (
       <div>
@@ -38,11 +42,12 @@ class BestBooks extends Component {
             {this.state.booksData.map((book) => {
               return (
                 <>
+            
                   <Carousel>
                     <Carousel.Item>
                       <img
                         className="d-block w-100"
-                        // src={}
+                     src={book.img}
                         alt="First slide"
                       />
                       <Carousel.Caption>
@@ -53,7 +58,7 @@ class BestBooks extends Component {
                     <Carousel.Item>
                       <img
                         className="d-block w-100"
-                        src="holder.js/800x400?text=Second slide&bg=282c34"
+                        src={book.img}
                         alt="Second slide"
                       />
 
@@ -65,7 +70,7 @@ class BestBooks extends Component {
                     <Carousel.Item>
                       <img
                         className="d-block w-100"
-                        src="holder.js/800x400?text=Third slide&bg=20232a"
+                        src={book.img}
                         alt="Third slide"
                       />
 
