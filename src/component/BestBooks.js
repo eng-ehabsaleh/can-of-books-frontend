@@ -6,21 +6,13 @@ import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import AddBook from "./AddBook";
 
-import BookFormModal from "./BookFormModal";
-require("dotenv").config();
-
-
-
-
-
-
 class BestBooks extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       booksData: [],
-      newBook:{},
+      newBook: {},
       showModal: false,
       showErrMs: false,
       errMssg: " the book collection is empty.😞",
@@ -50,7 +42,6 @@ class BestBooks extends Component {
       .catch(() => alert("the book was not added"));
   };
 
-
   handelDeleteBook = (bookId) => {
     axios
       .delete(`${process.env.REACT_APP_API_UR}/books/${bookId}`)
@@ -66,34 +57,30 @@ class BestBooks extends Component {
       .catch(() => alert("The Book was not deleted"));
   };
 
-  updateModal=()=>{
+  updateModal = () => {
     this.setState({
-      showModal:!this.state.showModal,
+      showModal: !this.state.showModal,
     });
-  }
+  };
 
-  getBookDataFromForm=(event)=>{
+  getBookDataFromForm = (event) => {
     event.preventDefault();
-    
+
     const dataBook = {
       name: event.target.name.value,
       description: event.target.description.value,
-      status:event.target.status.value,
-      email:event.target.email.value,
-      img:event.target.img.value
-    }
-   
-    
-    axios.post(`${process.env.REACT_APP_API_UR}`,dataBook).then((result)=>{
-      this.setState({
-        booksData:result.data,
-        
-      })
+      status: event.target.status.value,
+      email: event.target.email.value,
+      img: event.target.img.value,
+    };
 
+    axios.post(`${process.env.REACT_APP_API_UR}`, dataBook).then((result) => {
+      this.setState({
+        booksData: result.data,
+      });
     });
-console.log(dataBook);
-  }
- 
+    console.log(this.state.booksData);
+  };
 
   componentDidMount = () => {
     console.log("React", process.env.REACT_APP_API_UR);
@@ -125,69 +112,68 @@ console.log(dataBook);
             handelAddBook={this.handelAddBook}
           />
         )}
-        {this.state.booksData.length > 0 && (
-
-  <BookFormModal updatBook={this.updateModal}  flag={this.state.showModal}
-            bookInfo={this.getBookDataFromForm}/>
-
-        {
-        this.state.booksData.length > 0 && (
-
-          <>
-            {this.state.booksData.map((book) => {
-              return (
-                <>
-                  <Carousel>
-                    <Carousel.Item>
-                      <img
-                        className="d-block w-100"
-                        src={book.img}
-                        alt="First slide"
-                      />
-                      <Carousel.Caption>
-                        <h3>{book.title}</h3>
-                        <p>{book.description}</p>
-                      </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        className="d-block w-100"
-                        src={book.img}
-                        alt="Second slide"
-                      />
-
-                      <Carousel.Caption>
-                        <h3>{book.title}</h3>
-                        <p>{book.description}</p>
-                      </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        className="d-block w-100"
-                        src={book.img}
-                        alt="Third slide"
-                      />
-
-                      <Carousel.Caption>
-                        <h3>{book.title}</h3>
-                        <p>{book.description}</p>
-                      </Carousel.Caption>
-                    </Carousel.Item>
-                  </Carousel>
-                  <Button
-                    variant="danger"
-                    onClick={() => this.handelDeleteBook(book._id)}
-                  >
-                    Delete The Book
-                  </Button>
-                </>
-              );
-            })}
-          </>
-        )}
+        {this.state.booksData}
       </div>
     );
   }
 }
 
 export default BestBooks;
+
+// {this.state.booksData.length > 0 && (
+
+//   <>
+//     {
+//     this.state.booksData.length > 0 && (
+
+//       <>
+//         {this.state.booksData.map((book) => {
+//           return (
+//             <>
+//               <Carousel>
+//                 <Carousel.Item>
+//                   <img
+//                     className="d-block w-100"
+//                     src={book.img}
+//                     alt="First slide"
+//                   />
+//                   <Carousel.Caption>
+//                     <h3>{book.title}</h3>
+//                     <p>{book.description}</p>
+//                   </Carousel.Caption>
+//                 </Carousel.Item>
+//                 <Carousel.Item>
+//                   <img
+//                     className="d-block w-100"
+//                     src={book.img}
+//                     alt="Second slide"
+//                   />
+
+//                   <Carousel.Caption>
+//                     <h3>{book.title}</h3>
+//                     <p>{book.description}</p>
+//                   </Carousel.Caption>
+//                 </Carousel.Item>
+//                 <Carousel.Item>
+//                   <img
+//                     className="d-block w-100"
+//                     src={book.img}
+//                     alt="Third slide"
+//                   />
+
+//                   <Carousel.Caption>
+//                     <h3>{book.title}</h3>
+//                     <p>{book.description}</p>
+//                   </Carousel.Caption>
+//                 </Carousel.Item>
+//               </Carousel>
+//               <Button
+//                 variant="danger"
+//                 onClick={() => this.handelDeleteBook(book._id)}
+//               >
+//                 Delete The Book
+//               </Button>
+//             </>
+//           );
+//         })}
+//         </>
