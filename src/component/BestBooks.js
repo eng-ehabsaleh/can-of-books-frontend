@@ -122,13 +122,13 @@ class BestBooks extends Component {
                         <p>{book.description}</p>
                       </Carousel.Caption>
                     </Carousel.Item>
-                    <Button
-                      variant="danger"
-                      onClick={() => this.handelDeleteBook(book._id)}
-                    >
-                      Delete The Book
-                    </Button>
                   </Carousel>
+                  <Button
+                    variant="danger"
+                    onClick={() => this.handelDeleteBook(book._id)}
+                  >
+                    Delete The Book
+                  </Button>
                 </>
               );
             })}
