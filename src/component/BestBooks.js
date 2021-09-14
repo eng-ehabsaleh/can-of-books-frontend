@@ -10,7 +10,7 @@ class BestBooks extends Component {
 
     this.state = {
       booksData: [],
-      newBook:{},
+      newBook: {},
       showModal: false,
       showErrMs: false,
       errMssg: " the book collection is empty.😞",
@@ -124,13 +124,13 @@ class BestBooks extends Component {
                         <p>{book.description}</p>
                       </Carousel.Caption>
                     </Carousel.Item>
-                    <Button
-                      variant="danger"
-                      onClick={() => this.handelDeleteBook(book._id)}
-                    >
-                      Delete The Book
-                    </Button>
                   </Carousel>
+                  <Button
+                    variant="danger"
+                    onClick={() => this.handelDeleteBook(book._id)}
+                  >
+                    Delete The Book
+                  </Button>
                 </>
               );
             })}
