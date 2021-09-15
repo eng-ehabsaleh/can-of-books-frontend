@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
@@ -53,6 +52,7 @@ class BestBooks extends Component {
       img: e.target.bookImage.value,
     
     };
+
 
     axios.put(`${process.env.REACT_APP_API_UR}/books/${this.state.newBook._id}`, reqBody).then(updatedBookObject => {
 

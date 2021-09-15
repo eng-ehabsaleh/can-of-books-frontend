@@ -10,7 +10,7 @@ class AddBook extends Component {
           <Modal.Body>
             <Form onSubmit={this.props.handelAddBook}>
               <Form.Group className="mb-3">
-                <Form.Label>email adress</Form.Label>
+                <Form.Label>Email adress</Form.Label>
                 <Form.Control
                   type="text"
                   name="email"
@@ -18,7 +18,7 @@ class AddBook extends Component {
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Book Tiltl</Form.Label>
+                <Form.Label>Add Book Tiltl </Form.Label>
                 <Form.Control
                   type="text"
                   name="bookTilte"
