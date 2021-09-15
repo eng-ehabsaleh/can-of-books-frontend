@@ -11,7 +11,7 @@ class BestBooks extends Component {
 
     this.state = {
       booksData: [],
-      newBook:{},
+      newBook: {},
       showModal: false,
       showErrMs: false,
       errMssg: " the book collection is empty.😞",
@@ -208,6 +208,7 @@ class BestBooks extends Component {
                     <Button variant="warning" onClick={() => this.handelDisplayUpdateModal(book)}>Update Book</Button>
 
                   </Carousel> */}
+
                 </>
               );
             })}
