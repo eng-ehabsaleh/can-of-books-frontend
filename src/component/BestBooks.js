@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Carousel from "react-bootstrap/Carousel";
+import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import AddBook from "./AddBook";
+import UpdateBook from './UpdateBook';
 class BestBooks extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +17,7 @@ class BestBooks extends Component {
       showErrMs: false,
       errMssg: " the book collection is empty.😞",
       showAddBookModal: false,
+      showUpdateModal: false,
     };
   }
   handelDisplayAddModal = () => {
@@ -40,6 +43,52 @@ class BestBooks extends Component {
       .catch(() => alert("the book was not added"));
   };
 
+  handelUpdateModal = (e) => {
+    e.preventDefault();
+
+    const reqBody = {
+   email: e.target.email.value,
+      title: e.target.bookTilte.value,
+      description: e.target.bookDescription.value,
+      img: e.target.bookImage.value,
+    
+    };
+
+    axios.put(`${process.env.REACT_APP_API_UR}/books/${this.state.newBook._id}`, reqBody).then(updatedBookObject => {
+
+
+      const updateBookArr = this.state.booksData.map(books => {
+
+        if (books._id === this.state.newBook._id) {
+          books = updatedBookObject.data
+
+          return books;
+        }
+
+        return books; // we add this to make sure that we dont get undefined values when we dont find a match 
+
+      });
+
+      this.setState({
+        booksData: updateBookArr,
+        newBook: {}
+      })
+
+
+
+      this.handelDisplayUpdateModal(); // hide the update modal
+
+    }).catch(() => alert("Something went wrong!"));
+  }
+
+  handelDisplayUpdateModal = (BookObj) => {
+    this.setState({
+      showUpdateModal: !this.state.showUpdateModal,
+      newBook: BookObj
+    });
+  }
+
+
   handelDeleteBook = (bookId) => {
     axios
       .delete(`${process.env.REACT_APP_API_UR}/books/${bookId}`)
@@ -54,6 +103,9 @@ class BestBooks extends Component {
       })
       .catch(() => alert("The Book was not deleted"));
   };
+
+
+
   componentDidMount = () => {
     console.log("React", process.env.REACT_APP_API_UR);
     axios
@@ -83,54 +135,79 @@ class BestBooks extends Component {
             handelAddBook={this.handelAddBook}
           />
         )}
+
+{
+          this.state.showUpdateModal &&
+          <>
+            <UpdateBook
+              show={this.state.showUpdateModal}
+              handelUpdateModal={this.handelUpdateModal}
+              handelDisplayUpdateModal={this.handelDisplayUpdateModal}
+              newBook={this.state.newBook}
+            />
+          </>
+        }
+
+
         {this.state.booksData.length > 0 && (
           <>
             {this.state.booksData.map((book) => {
               return (
                 <>
+
+
+<Card style={{ width: '18rem' }}>
+  <Card.Img variant="top" src={book.img} />
+  <Card.Body>
+    <Card.Title>{book.title}</Card.Title>
+    <Card.Text>
+    {book.description}
+    </Card.Text>
+    <Button
+                      variant="danger"
+                      onClick={() => this.handelDeleteBook(book._id)}
+                    >
+                      Delete The Book
+                    </Button>
+                    
+                    <Button variant="warning" onClick={() => this.handelDisplayUpdateModal(book)}>Update Book</Button>
+
+  </Card.Body>
+</Card>
+{/* 
                   <Carousel>
+                  
                     <Carousel.Item>
                       <img
                         className="d-block w-100"
                         src={book.img}
-                        alt="First slide"
-                      />
-                      <Carousel.Caption>
-                        <h3>{book.title}</h3>
-                        <p>{book.description}</p>
-                      </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        className="d-block w-100"
-                        src={book.img}
-                        alt="Second slide"
-                      />
 
-                      <Carousel.Caption>
-                        <h3>{book.title}</h3>
-                        <p>{book.description}</p>
-                      </Carousel.Caption>
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        className="d-block w-100"
-                        src={book.img}
-                        alt="Third slide"
                       />
-
                       <Carousel.Caption>
                         <h3>{book.title}</h3>
                         <p>{book.description}</p>
                       </Carousel.Caption>
+                      <Button
+                      variant="danger"
+                      onClick={() => this.handelDeleteBook(book._id)}
+                    >
+                      Delete The Book
+                    </Button>
+                    
+                    <Button variant="warning" onClick={() => this.handelDisplayUpdateModal(book)}>Update Book</Button>
+
                     </Carousel.Item>
+                   
                     <Button
                       variant="danger"
                       onClick={() => this.handelDeleteBook(book._id)}
                     >
                       Delete The Book
                     </Button>
-                  </Carousel>
+                    
+                    <Button variant="warning" onClick={() => this.handelDisplayUpdateModal(book)}>Update Book</Button>
+
+                  </Carousel> */}
                 </>
               );
             })}
