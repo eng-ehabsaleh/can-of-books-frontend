@@ -4,7 +4,8 @@ import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import AddBook from "./AddBook";
-import UpdateBook from './UpdateBook';
+import UpdateBook from "./UpdateBook";
+import { withAuth0 } from "@auth0/auth0-react";
 class BestBooks extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +27,7 @@ class BestBooks extends Component {
   handelAddBook = (e) => {
     e.preventDefault();
     const reqBody = {
-      email: e.target.email.value,
+      email: this.props.auth0.user.email,
       title: e.target.bookTilte.value,
       description: e.target.bookDescription.value,
       img: e.target.bookImage.value,
@@ -46,48 +47,44 @@ class BestBooks extends Component {
     e.preventDefault();
 
     const reqBody = {
-   email: e.target.email.value,
+      email: e.target.email.value,
       title: e.target.bookTilte.value,
       description: e.target.bookDescription.value,
       img: e.target.bookImage.value,
-    
     };
 
+    axios
+      .put(
+        `${process.env.REACT_APP_API_UR}/books/${this.state.newBook._id}`,
+        reqBody
+      )
+      .then((updatedBookObject) => {
+        const updateBookArr = this.state.booksData.map((books) => {
+          if (books._id === this.state.newBook._id) {
+            books = updatedBookObject.data;
 
-    axios.put(`${process.env.REACT_APP_API_UR}/books/${this.state.newBook._id}`, reqBody).then(updatedBookObject => {
+            return books;
+          }
 
+          return books; // we add this to make sure that we dont get undefined values when we dont find a match
+        });
 
-      const updateBookArr = this.state.booksData.map(books => {
+        this.setState({
+          booksData: updateBookArr,
+          newBook: {},
+        });
 
-        if (books._id === this.state.newBook._id) {
-          books = updatedBookObject.data
-
-          return books;
-        }
-
-        return books; // we add this to make sure that we dont get undefined values when we dont find a match 
-
-      });
-
-      this.setState({
-        booksData: updateBookArr,
-        newBook: {}
+        this.handelDisplayUpdateModal(); // hide the update modal
       })
-
-
-
-      this.handelDisplayUpdateModal(); // hide the update modal
-
-    }).catch(() => alert("Something went wrong!"));
-  }
+      .catch(() => alert("Something went wrong!"));
+  };
 
   handelDisplayUpdateModal = (BookObj) => {
     this.setState({
       showUpdateModal: !this.state.showUpdateModal,
-      newBook: BookObj
+      newBook: BookObj,
     });
-  }
-
+  };
 
   handelDeleteBook = (bookId) => {
     axios
@@ -104,12 +101,12 @@ class BestBooks extends Component {
       .catch(() => alert("The Book was not deleted"));
   };
 
-
-
   componentDidMount = () => {
     console.log("React", process.env.REACT_APP_API_UR);
     axios
-      .get(`${process.env.REACT_APP_API_UR}/books`)
+      .get(
+        `${process.env.REACT_APP_API_UR}/books/${this.props.auth0.user.email}`
+      )
       .then((bookeRes) => {
         this.setState({
           booksData: bookeRes.data,
@@ -136,8 +133,7 @@ class BestBooks extends Component {
           />
         )}
 
-{
-          this.state.showUpdateModal &&
+        {this.state.showUpdateModal && (
           <>
             <UpdateBook
               show={this.state.showUpdateModal}
@@ -146,35 +142,34 @@ class BestBooks extends Component {
               newBook={this.state.newBook}
             />
           </>
-        }
-
+        )}
 
         {this.state.booksData.length > 0 && (
           <>
             {this.state.booksData.map((book) => {
               return (
                 <>
+                  <Card style={{ width: "18rem" }}>
+                    <Card.Img variant="top" src={book.img} />
+                    <Card.Body>
+                      <Card.Title>{book.title}</Card.Title>
+                      <Card.Text>{book.description}</Card.Text>
+                      <Button
+                        variant="danger"
+                        onClick={() => this.handelDeleteBook(book._id)}
+                      >
+                        Delete The Book
+                      </Button>
 
-
-<Card style={{ width: '18rem' }}>
-  <Card.Img variant="top" src={book.img} />
-  <Card.Body>
-    <Card.Title>{book.title}</Card.Title>
-    <Card.Text>
-    {book.description}
-    </Card.Text>
-    <Button
-                      variant="danger"
-                      onClick={() => this.handelDeleteBook(book._id)}
-                    >
-                      Delete The Book
-                    </Button>
-                    
-                    <Button variant="warning" onClick={() => this.handelDisplayUpdateModal(book)}>Update Book</Button>
-
-  </Card.Body>
-</Card>
-{/* 
+                      <Button
+                        variant="warning"
+                        onClick={() => this.handelDisplayUpdateModal(book)}
+                      >
+                        Update Book
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                  {/* 
                   <Carousel>
                   
                     <Carousel.Item>
@@ -208,7 +203,6 @@ class BestBooks extends Component {
                     <Button variant="warning" onClick={() => this.handelDisplayUpdateModal(book)}>Update Book</Button>
 
                   </Carousel> */}
-
                 </>
               );
             })}
@@ -219,4 +213,4 @@ class BestBooks extends Component {
   }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);
